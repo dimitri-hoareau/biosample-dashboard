@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+db.sqlite3
+*.log
+
+# React
+node_modules/
+/build
+.env
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Divers
+.DS_Store
+.env.local
+.idea/
+.vscode/
+EOL
