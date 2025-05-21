@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Table } from "antd";
+import { Table, Button } from "antd";
+import { useNavigate } from "react-router-dom";
 import { fetchBioSamples } from "../services/api.ts";
 import type { BioSample } from "../types";
-import SampleForm from "./SampleForm.tsx";
 
 function SampleList() {
   const [samples, setSamples] = useState<BioSample[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadSamples = async () => {
@@ -46,13 +47,33 @@ function SampleList() {
       dataIndex: "sampling_operator",
       key: "sampling_operator",
     },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_: unknown, record: BioSample) => (
+        <Button type="link" onClick={() => navigate(`/samples/${record.id}`)}>
+          View
+        </Button>
+      ),
+    },
   ];
 
   return (
     <div>
-      <h1>Biological Samples</h1>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 16,
+        }}
+      >
+        <h1>Biological Samples</h1>
+        <Button type="primary" onClick={() => navigate("/samples/new")}>
+          + Add Sample
+        </Button>
+      </div>
       <Table dataSource={samples} columns={columns} rowKey="id" />
-      <SampleForm />
     </div>
   );
 }
