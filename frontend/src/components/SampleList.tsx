@@ -1,24 +1,47 @@
 import { useState, useEffect } from "react";
-import { Table, Button } from "antd";
+import { Table, Button, Space, Popconfirm, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import { fetchBioSamples } from "../services/api.ts";
+import { fetchBioSamples, deleteBioSample } from "../services/api.ts";
 import type { BioSample } from "../types";
 
 function SampleList() {
   const [samples, setSamples] = useState<BioSample[]>([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const loadSamples = async () => {
+    try {
+      setLoading(true);
+      const data = await fetchBioSamples();
+      setSamples(data);
+    } catch (err) {
+      console.error("Error loading samples:", err);
+      message.error("Failed to load samples");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const loadSamples = async () => {
-      try {
-        const data = await fetchBioSamples();
-        setSamples(data);
-      } catch (err) {
-        console.error("Error loading samples:", err);
-      }
-    };
     loadSamples();
   }, []);
+
+  const handleDelete = async (id: number) => {
+    try {
+      setLoading(true);
+      await deleteBioSample(id);
+
+      // Update list after deleting sample
+      setSamples(samples.filter((sample) => sample.id !== id));
+
+      message.success("Sample deleted successfully");
+    } catch (err) {
+      console.error("Error deleting sample:", err);
+      message.error("Failed to delete sample");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const columns = [
     {
@@ -51,9 +74,28 @@ function SampleList() {
       title: "Actions",
       key: "actions",
       render: (_: unknown, record: BioSample) => (
-        <Button type="link" onClick={() => navigate(`/samples/${record.id}`)}>
-          View
-        </Button>
+        <Space>
+          <Button type="link" onClick={() => navigate(`/samples/${record.id}`)}>
+            View
+          </Button>
+          <Button
+            type="link"
+            onClick={() => navigate(`/samples/${record.id}/edit`)}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Delete Sample"
+            description="Are you sure you want to delete this sample?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="link" danger>
+              Delete
+            </Button>
+          </Popconfirm>
+        </Space>
       ),
     },
   ];
@@ -73,7 +115,12 @@ function SampleList() {
           + Add Sample
         </Button>
       </div>
-      <Table dataSource={samples} columns={columns} rowKey="id" />
+      <Table
+        dataSource={samples}
+        columns={columns}
+        rowKey="id"
+        loading={loading}
+      />
     </div>
   );
 }
