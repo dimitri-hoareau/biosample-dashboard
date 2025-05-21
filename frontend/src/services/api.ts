@@ -81,3 +81,23 @@ export const deleteBioSample = async (id: number): Promise<void> => {
   });
   if (!response.ok) throw new Error("Failed to delete sample");
 };
+
+export const addComment = async (comment: {
+  text: string;
+  biosample: number;
+}): Promise<Comment> => {
+  const response = await fetch(`${API_URL}/comments/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(comment),
+  });
+  console.log(JSON.stringify(comment));
+
+  if (!response.ok) {
+    throw new Error("Failed to add comment");
+  }
+
+  return await response.json();
+};
