@@ -1,16 +1,17 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SampleList from "./components/SampleList";
+import Sample from "./components/Sample";
 import "./App.css";
 
 function App() {
   return (
     <div className="App">
-      <header>
-        <div className="logo">Spore.Bio</div>
-      </header>
-
-      <main>
-        <SampleList />
-      </main>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<SampleList />} />
+          <Route path="/samples/:id" element={<Sample />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
