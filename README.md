@@ -55,7 +55,7 @@ To get the project running locally, follow these steps:
 
 ```bash
 git clone https://github.com/dimitri-hoareau/biosample-dashboard
-cd biosample_project_root
+cd biosample_dashboard
 
 ```
 
