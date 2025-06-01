@@ -33,7 +33,6 @@ This is a simple full-stack application for managing biological samples. The app
 - **Comments:**
   - Add comments to a specific biological sample.
   - View comments associated with a biological sample.
-  - (Optionnel, si implémenté) Delete comments.
 
 ## Project Structure
 
