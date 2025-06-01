@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Form, Input, DatePicker, Select, Button, Card } from "antd";
 import dayjs from "dayjs";
@@ -14,7 +14,6 @@ function SampleForm() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
 
   const isEditMode = !!id;
 
@@ -41,8 +40,6 @@ function SampleForm() {
 
   const onFinish = async (values: any) => {
     try {
-      setLoading(true);
-
       const formattedValues = {
         ...values,
         sampling_date: values.sampling_date?.format("YYYY-MM-DD"),
@@ -57,8 +54,6 @@ function SampleForm() {
       navigate("/");
     } catch (err) {
       console.error("Error saving sample:", err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -117,7 +112,7 @@ function SampleForm() {
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button type="primary" htmlType="submit">
             {isEditMode ? "Update" : "Create"}
           </Button>
         </Form.Item>

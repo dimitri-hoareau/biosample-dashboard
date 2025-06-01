@@ -1,24 +1,19 @@
 import { useState, useEffect } from "react";
-import { Table, Button, Space, Popconfirm, message } from "antd";
+import { Table, Button, Space, Popconfirm } from "antd";
 import { useNavigate } from "react-router-dom";
 import { fetchBioSamples, deleteBioSample } from "../services/api.ts";
 import type { BioSample } from "../types";
 
 function SampleList() {
   const [samples, setSamples] = useState<BioSample[]>([]);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const loadSamples = async () => {
     try {
-      setLoading(true);
       const data = await fetchBioSamples();
       setSamples(data);
     } catch (err) {
       console.error("Error loading samples:", err);
-      message.error("Failed to load samples");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -28,18 +23,14 @@ function SampleList() {
 
   const handleDelete = async (id: number) => {
     try {
-      setLoading(true);
       await deleteBioSample(id);
 
       // Update list after deleting sample
       setSamples(samples.filter((sample) => sample.id !== id));
 
-      message.success("Sample deleted successfully");
+      console.log("Sample deleted successfully");
     } catch (err) {
       console.error("Error deleting sample:", err);
-      message.error("Failed to delete sample");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -115,12 +106,7 @@ function SampleList() {
           + Add Sample
         </Button>
       </div>
-      <Table
-        dataSource={samples}
-        columns={columns}
-        rowKey="id"
-        loading={loading}
-      />
+      <Table dataSource={samples} columns={columns} rowKey="id" />
     </div>
   );
 }
